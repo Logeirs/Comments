@@ -1,58 +1,5 @@
 # -*- coding: UTF-8 -*-
 
-'''
-TODO:
------
-	* Spidering
-	* manage session/cookies (detect when redirect towards login page)
-		-> see requests (requests.get)
-	
-	* When source code is provided:
-		-d input dir
-		-f what about external JS loaded?
-
-	* When source file is provided:
-		How to make the difference between a call to a local files (/include/js/blah.js) and a call to a url (http://blah.com/yeah.js) ?
-
-	* CSS comments ?
-
-
-TO IMPROVE:
------------
-	* clear screen (os.system("cls")) obviously doesn't work on Linux
-	* regex (all)
-	* at this point, can't use -f AND -u together
-
-
-ISSUES:
--------
-	- REGEX doesn't work when JS is minimized
-	- if script tag is not closed, then jscode is empty
-	- when -u <url> if the URL has GET parameters, then you MUST use quotes. example: 
-		comments.py -u "http://website.com?param1=1&param2=2"
-		If you don't, you may have an error such as: 'blah' is not recognized as an internal or external command, ...
-	- when -f <file>, the "target_type" is then defined with the value "file". There will be an issue if you try to request an external JS with its URL, for instance:
-		1. run this script with a local file (php, html) as a target
-		2. try to access an external JS such as: http://blah.com/myjs.js
-		3. return to the original target
-
-		In short: if file: stay with file, if url: stay with url
-
-
-EXAMPLES:
----------
-comments.py -f <file.php>
-comments.py -f <file.html>
-comments.py -f <file.js>
-
-comments.py -u http://<url.com>
-comments.py -u "http://url.com?param1=1&param2=2"
-comments.py -u https://<url.com>
-comments.py -u http://<url.js>
-
-More to come.
-'''
-
 #http://docs.python-requests.org/en/latest/user/quickstart/
 import requests, urllib
 import argparse
@@ -70,7 +17,7 @@ def getJScomments(jscode):
 	reg_comm_ml="\/\*.*?\*\/"			# multi-line comment
 
 
-	#if jscode is JS file/URL (*.js) the jscode is str
+	#if jscode is JS file/URL (*.js) then jscode is str
 	#if jscode comes from an HTML source, then this is bs4 type
 
 	# one-line comment: //example
