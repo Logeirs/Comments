@@ -1,5 +1,11 @@
 # -*- coding: UTF-8 -*-
 
+
+'''
+Next step: session/cookie management or -o option
+'''
+
+
 #http://docs.python-requests.org/en/latest/user/quickstart/
 import requests, urllib
 import argparse
