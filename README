@@ -1,10 +1,24 @@
 DESCRIPTION:
 ------------
-This script gets all comments in a web source code
-You can use it with either a URL (-u) or by passing a file as an argument (-f)
-	- URL can be either a page or JS URL.
-	- File can be HTML/PHP or JS
-	See "examples" section for more details.
+	This script gets all comments in a web source code
+	You can use it with either a URL (-u) or by passing a file as an argument (-f)
+		- URL can be either a page or JS URL.
+		- File can be HTML/PHP or JS
+		See "examples" section for more details.
+
+
+HELP:
+-----
+	usage: comments.py [-f <input file>]
+
+	Get HTML and JavaScript comments from a file or a website.
+
+	optional arguments:
+	  -h, --help 	show this help message and exit
+	  -f F 			input source file
+	  -u U 			target url
+	  -o 			output file (todo)
+
 
 
 TODO:
