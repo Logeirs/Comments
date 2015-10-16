@@ -9,14 +9,14 @@ DESCRIPTION:
 
 HELP:
 -----
-	usage: comments.py [-f <input file>]
+	usage: comments.py [-f <input file>] [-u <url>]
 
 	Get HTML and JavaScript comments from a file or a website.
 
-	optional arguments:
+	arguments:
 	  -h, --help 	show this help message and exit
-	  -f F 			input source file
-	  -u U 			target url
+	  -f 			input source file
+	  -u 			target url
 	  -o 			output file (todo)
 
 
