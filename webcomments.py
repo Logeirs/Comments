@@ -8,8 +8,6 @@ from bs4 import BeautifulSoup, Comment
 from urlparse import urljoin
 
 
-global isJS
-global nbJS
 
 
 def getJScomments(jscode):
@@ -50,6 +48,7 @@ def getContent(target, target_type):
 		- "file"
 	'''
 
+	global isJS
 
 	print "\n[+] TARGET = %s  (%s)\n" %(target, target_type)
 
@@ -100,6 +99,7 @@ def getContent(target, target_type):
 
 def getExtJS(js_ext_all):
 	print "\n\n\n[+] EXTERNAL JS (%i found)\n" %(len(js_ext_all))
+	global nbJS
 	nbJS=0
 	for js_ext in js_ext_all :
 		print "\t[%02d] %s" %(nbJS, js_ext)
@@ -136,7 +136,7 @@ args = parser.parse_args()
 
 
 if args.c:
-	# Requests module needs a dictionary
+	# Requests module requires a dictionary
 	dictcookies={}
 
 	for nbCookies in range(0,len(args.c)):
@@ -151,7 +151,10 @@ if args.c:
 
 
 # if target is a source file (.js, .html, .php, etc.)
-if args.f: 
+if args.f:
+	if os.path.isfile(args.f)==False:
+		print "File does not exist!"
+		sys.exit()
 	target_type="file"
 	target=args.f
 	target_origin=args.f
@@ -211,7 +214,7 @@ while True:
 
 
 
-	# remove occurences and keeps it as a list
+	# remove occurences and keep it as a list
 	js_comments_all = list(set(js_comments_all))
 	print "\n\n\n[+] JS COMMENTS (%i found)\n" %(len(js_comments_all))
 
