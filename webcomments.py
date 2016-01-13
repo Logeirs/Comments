@@ -1,18 +1,15 @@
 # -*- coding: UTF-8 -*-
 
-
-'''
-Next step: session/cookie management or -o option
-'''
-
-
-#http://docs.python-requests.org/en/latest/user/quickstart/
 import requests, urllib
 import argparse
 import re
 import sys, os
 from bs4 import BeautifulSoup, Comment
 from urlparse import urljoin
+
+
+global isJS
+global nbJS
 
 
 def getJScomments(jscode):
@@ -23,7 +20,7 @@ def getJScomments(jscode):
 	reg_comm_ml="\/\*.*?\*\/"			# multi-line comment
 
 
-	#if jscode is JS file/URL (*.js) then jscode is str
+	#if jscode is JS file/URL (*.js) the jscode is str
 	#if jscode comes from an HTML source, then this is bs4 type
 
 	# one-line comment: //example
@@ -53,7 +50,6 @@ def getContent(target, target_type):
 		- "file"
 	'''
 
-	global isJS
 
 	print "\n[+] TARGET = %s  (%s)\n" %(target, target_type)
 
@@ -72,8 +68,10 @@ def getContent(target, target_type):
 	
 	#if target url is provided
 	#BE CAREFUL: if the URL has GET parameters, then you MUST put it between quotes
-	elif target_type == "url":		
-		try: resp = requests.get(target)
+	elif target_type == "url":
+		try:
+			if args.c: resp = requests.get(target, cookies=dictcookies)
+			else: resp = requests.get(target)
 		except: 
 			print "Error when requesting the target"
 			sys.exit()
@@ -91,7 +89,7 @@ def getContent(target, target_type):
 			isJS=False
 
 	else:
-		print "Error, type unknown"
+		print "Error, unknown type"
 		sys.exit()
 
 	# print "*** DEBUG ***\n %s \n*** DEBUG ***" %(content)
@@ -102,7 +100,6 @@ def getContent(target, target_type):
 
 def getExtJS(js_ext_all):
 	print "\n\n\n[+] EXTERNAL JS (%i found)\n" %(len(js_ext_all))
-	global nbJS
 	nbJS=0
 	for js_ext in js_ext_all :
 		print "\t[%02d] %s" %(nbJS, js_ext)
@@ -114,6 +111,9 @@ def clear():
 	os.system("cls")
 
 
+
+
+
 ''' 
 PROGRAM STARTS HERE 
 '''
@@ -122,15 +122,32 @@ PROGRAM STARTS HERE
 parser = argparse.ArgumentParser()
 
 parser = argparse.ArgumentParser(
-	usage="comments.py [-o <output file>]", 
+	usage="comments.py [-u <target url>] [-f <intput file>] [-c cookie=value]", 
 	description="Get HTML and JavaScript comments from a file or a website.", 
 	epilog="Example: comments.py -u http://<website> -o output.txt"
 	)
 
-# parser.add_argument("-o", help="output file", type=str)
+parser.add_argument("-o", help="output file", type=str)
 parser.add_argument("-f", help="input source file", type=str)
 parser.add_argument("-u", help="target url", type=str)
+parser.add_argument("-c", help="cookie='value'", type=str, nargs='+')
 args = parser.parse_args()
+
+
+
+if args.c:
+	# Requests module needs a dictionary
+	dictcookies={}
+
+	for nbCookies in range(0,len(args.c)):
+		cookie=args.c[nbCookies]
+		
+		cname=re.search("(.*)=.*",cookie)
+		cname=cname.group(1)
+		cvalue=re.search(".*=(.*)",cookie)
+		cvalue=cvalue.group(1)
+		dictcookies[cname]=cvalue
+
 
 
 # if target is a source file (.js, .html, .php, etc.)
@@ -155,7 +172,7 @@ while True:
 	js_ext_all=[]
 	js_comments_all=[]
 	isJS=''
-	clear()
+	# clear()
 
 	# Get target's content
 	content = getContent(target,target_type)
@@ -237,7 +254,7 @@ while True:
 						target=target_origin
 						break
 
-					# latter element in os.path.join() should not start with '/'
+					# last element in os.path.join() should not start with '/' because they will be considered as "absolute path" and everything before them is discarded
 					js_ext_choice=list(js_ext_all[choice])
 					if js_ext_choice[0]=='/':
 						js_ext_choice[0]=''
