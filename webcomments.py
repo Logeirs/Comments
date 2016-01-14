@@ -52,7 +52,7 @@ def getContent(target, target_type):
 
 	print "\n[+] TARGET = %s  (%s)\n" %(target, target_type)
 
-	if target_type == "file":
+	if target_type == "file" or target_type == "folder":
 		with open(target,'rb') as input_file:
 			#if target is a JS file (*.js) then just get the content
 			if os.path.splitext(target)[1] == ".js":
@@ -72,7 +72,7 @@ def getContent(target, target_type):
 			if args.c: resp = requests.get(target, cookies=dictcookies)
 			else: resp = requests.get(target)
 		except: 
-			print "Error when requesting the target"
+			print "Error when requesting the target."
 			sys.exit()
 		
 		#check if this is a JS or HTML code by getting the content-type
@@ -88,7 +88,7 @@ def getContent(target, target_type):
 			isJS=False
 
 	else:
-		print "Error, unknown type"
+		print "Error, unknown type."
 		sys.exit()
 
 	# print "*** DEBUG ***\n %s \n*** DEBUG ***" %(content)
@@ -97,13 +97,13 @@ def getContent(target, target_type):
 
 
 
-def getExtJS(js_ext_all):
-	print "\n\n\n[+] EXTERNAL JS (%i found)\n" %(len(js_ext_all))
-	global nbJS
-	nbJS=0
-	for js_ext in js_ext_all :
-		print "\t[%02d] %s" %(nbJS, js_ext)
-		nbJS+=1
+def displayChoice(choice_title, choice_list):
+	print "\n\n\n[+] %s (%i found)\n" %(choice_title, len(choice_list))
+	global choice_nb
+	choice_nb=0
+	for choice_element in choice_list :
+		print "\t[%02d] %s" %(choice_nb, choice_element)
+		choice_nb+=1
 
 
 
@@ -118,19 +118,24 @@ def clear():
 PROGRAM STARTS HERE 
 '''
 
-# Args
-parser = argparse.ArgumentParser()
+target=""
 
+# Args
 parser = argparse.ArgumentParser(
-	usage="comments.py [-u <target url>] [-f <intput file>] [-c cookie=value]", 
+	usage="comments.py ([-u <target url>] | [-f <intput file>] | [-d <input directory>]) [-c cookie=value]", 
 	description="Get HTML and JavaScript comments from a file or a website.", 
 	epilog="Example: comments.py -u http://<website> -o output.txt"
 	)
 
 parser.add_argument("-o", help="output file", type=str)
+parser.add_argument("-c", help="cookie='value'", type=str, nargs='+')
+
+# can't use -f and -u together
+# group = parser.add_mutually_exclusive_group()
 parser.add_argument("-f", help="input source file", type=str)
 parser.add_argument("-u", help="target url", type=str)
-parser.add_argument("-c", help="cookie='value'", type=str, nargs='+')
+parser.add_argument("-d", help="input directory", type=str)
+
 args = parser.parse_args()
 
 
@@ -164,21 +169,48 @@ if args.f:
 elif args.u:
 	target_type="url"
 	target=urllib.unquote_plus(args.u)	#unquote_plus: Replace %xx by their single-character equivalent
-	target_origin=args.u
+	target_origin=urllib.unquote_plus(args.u) #args.u
 
+
+
+# if target is a directory
+elif args.d:
+	#take the first file
+	#need to select only the web files! (html, php, etc.)
+
+	for root, dirs, files in os.walk(args.d):
+		if files:
+			for f in files:
+				target_type="folder"
+				target=os.path.join(root, f)
+				target_origin=target
+				break
+			break
+	if not target:
+		print "No target found."
+		sys.exit()
+
+
+	
 else:
 	print "Need a target!"
 	sys.exit()
 
 
 while True:	
-	js_ext_all=[]
+	js_ext_all=[]			# JS from a file or url (not included within the web page with <script> tag)
 	js_comments_all=[]
 	isJS=''
-	# clear()
+	files_all=[]
+	clear()
 
 	# Get target's content
-	content = getContent(target,target_type)
+	try: 
+		content = getContent(target,target_type)
+	except: 
+		print "Error while getting the content."
+		sys.exit()
+
 
 	#if the target file is not a JS file:
 	#get external JS, HTML comments and all JS codes
@@ -207,7 +239,7 @@ while True:
 		js_comments_all += getJScomments(content)
 
 	else:
-		print "Erorr: don't know how to handle this target"
+		print "Erorr: don't know how to handle this target."
 		sys.exit()
 
 
@@ -224,24 +256,42 @@ while True:
 		except:
 			print "\t[-] !Error! (very special characters?)\n"
 
-	
-	js_ext_all.append(target_origin)	# add the original target
-	js_ext_all=list(set(js_ext_all))	# remove ext JS occurences and keeps it as a list (because a 'set' type is not indexable)
-	js_ext_all.sort()					# sort the list
-	js_ext_all.insert(0,js_ext_all.pop(js_ext_all.index(target_origin)))		#bring the original target to the first position
-
-	getExtJS(js_ext_all)	#display, set = remove occurences
 
 
-	# if no ext JS
-	# if len(js_ext_all) == 0: sys.exit()
+
+
+
+
+	if args.d:
+		for root, dirs, files in os.walk(args.d):
+			for f in files:
+				files_all.append(os.path.abspath(os.path.join(root, f)))
+
+		choice_list=files_all
+		choice_title="FILES"
+
+	else:
+		js_ext_all.append(target_origin)	# add the original target
+		js_ext_all=list(set(js_ext_all))	# remove ext JS occurences and keeps it as a list (because a 'set' type is not indexable), set = remove occurences
+		js_ext_all.sort()					# sort the list
+		js_ext_all.insert(0,js_ext_all.pop(js_ext_all.index(target_origin)))		#bring the original target to the first position
+		
+		choice_list=js_ext_all
+		choice_title="EXTERNAL JS"
+
+
+	displayChoice(choice_title, choice_list)	#display
+
+
+		# if no ext JS
+		# if len(js_ext_all) == 0: sys.exit()
 
 	choice=''
-	while (choice.isdigit != False) or (choice != 'q'):
-		choice = raw_input("\nChoose an external JS ('q' to exit): ")
+	while True:
+		choice = raw_input("\nYour choice? ('q' to exit): ")
 		if choice.isdigit():
 			choice=int(choice)
-			if choice < nbJS:
+			if choice < choice_nb:
 				# clear()
 
 				#reinit values
@@ -249,34 +299,35 @@ while True:
 
 				# concatenate url if the ext JS is in the same domain
 				# targe_type stays 'url'
-				if target_type == "url": target=urljoin(target_origin,js_ext_all[choice])
+				if target_type == "url": target=urljoin(target_origin,choice_list[choice])
 
-				elif target_type == "file": 
-					#if choice=0, it means the target is the origin target (=args.f)
+				elif target_type == "file" or target_type == "folder": 
+					#if choice=0, it means the new target is the origin target (=args.f)
 					if choice==0: 
 						target=target_origin
 						break
 
 					# last element in os.path.join() should not start with '/' because they will be considered as "absolute path" and everything before them is discarded
-					js_ext_choice=list(js_ext_all[choice])
+					js_ext_choice=list(choice_list[choice])
 					if js_ext_choice[0]=='/':
 						js_ext_choice[0]=''
-						js_ext_choice=str(''.join(js_ext_choice))
+					
+					js_ext_choice=str(''.join(js_ext_choice))
 
 					# join the 2 paths: path of origin target + js
 					target=os.path.join(os.path.dirname(os.path.realpath(target_origin)),js_ext_choice)
 
-				#choice is ok, we can exit the infinite loop
+				#choice is ok, we can exit the while loop (choice.isdigit)
 				break
 
 			else:
-				print "Index out of range"
+				print "Index out of range."
 				choice = ''	# need to convert it back to a string because isdigit() in the while loop requires a string
 
 		elif choice == 'q': sys.exit()
 
 		else: 
-			print "Error: Type a number or 'q' to exit"
+			print "Error: Type a number or 'q' to exit."
 
 
 '''
