@@ -292,10 +292,6 @@ while True:
 		if choice.isdigit():
 			choice=int(choice)
 			if choice < choice_nb:
-				# clear()
-
-				#reinit values
-				js_comments_all = []
 
 				# concatenate url if the ext JS is in the same domain
 				# targe_type stays 'url'
@@ -308,16 +304,18 @@ while True:
 						break
 
 					# last element in os.path.join() should not start with '/' because they will be considered as "absolute path" and everything before them is discarded
-					js_ext_choice=list(choice_list[choice])
-					if js_ext_choice[0]=='/':
-						js_ext_choice[0]=''
+					choice_value=list(choice_list[choice])
+					if choice_value[0]=='/':
+						choice_value[0]=''
 					
-					js_ext_choice=str(''.join(js_ext_choice))
-
-					# join the 2 paths: path of origin target + js
-					target=os.path.join(os.path.dirname(os.path.realpath(target_origin)),js_ext_choice)
+					choice_value=str(''.join(choice_value))
+					# if file as input, need to join the 2 paths: path of origin target + value
+					if target_type == "file": target=os.path.join(os.path.dirname(os.path.realpath(target_origin)),choice_value)
+					else: target=choice_value
 
 				#choice is ok, we can exit the while loop (choice.isdigit)
+				#reinit values
+				js_comments_all = []
 				break
 
 			else:
