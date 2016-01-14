@@ -75,5 +75,6 @@ comments.py -u http://<url.js>
 comments.py -u http://<url.com> -c Cookie1=value1 Cookie2=value2
 
 comments.py -d ./test/
+comments.py -d C:/Users/blah/Documents/
 
 More to come.
