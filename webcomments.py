@@ -10,6 +10,8 @@ from urlparse import urljoin
 
 
 
+
+
 def getJScomments(jscode):
 	# get all comments inside jscode, returns a list
 
@@ -119,6 +121,7 @@ PROGRAM STARTS HERE
 '''
 
 target=""
+web_ext=[".asp", ".aspx", ".asx", ".html", "htm", ".js", ".php"]
 
 # Args
 parser = argparse.ArgumentParser(
@@ -265,7 +268,10 @@ while True:
 	if args.d:
 		for root, dirs, files in os.walk(args.d):
 			for f in files:
-				files_all.append(os.path.abspath(os.path.join(root, f)))
+				# get file extension
+				f_name, f_ext = os.path.splitext(f)
+				# if this is a web file, add it to the list
+				if f_ext in web_ext: files_all.append(os.path.abspath(os.path.join(root, f)))
 
 		choice_list=files_all
 		choice_title="FILES"
