@@ -1,100 +1,95 @@
 # -*- coding: UTF-8 -*-
 
-import requests, urllib
+'''
+TODO:
+-----
+	* Spidering URLs (in progress)
+
+	* POST requests and arguments
+		
+	* When source code is provided:
+		-f what about external JS loaded?
+
+	* When source file is provided:
+		How to make the difference between a call to a local files (/include/js/blah.js) and a call to a url (http://blah.com/yeah.js) ?
+
+	* CSS comments ?
+
+
+TO IMPROVE:
+-----------
+	* clear screen (os.system("cls")) obviously doesn't work on Linux
+	* regex (all)
+	* at this point, can't use -f AND -u together
+	* -d displays absolute path
+	* -f displays external JS (from other domains), while -d displays local files (JS, html, php, etc.), no external files
+
+
+ISSUES:
+-------
+	- REGEX doesn't work when JS is minimized
+	- if script tag is not closed, then jscode is empty
+	- when -u <url> if the URL has GET parameters, then you MUST use quotes. example: 
+		comments.py -u "http://website.com?param1=1&param2=2"
+		If you don't, you may have an error such as: 'blah' is not recognized as an internal or external command, ...
+			Seems to work now...
+	- when -f <file>, the "target_type" is then defined with the value "file". There will be an issue if you try to request an external JS with its URL, for instance:
+		1. run this script with a local file (php, html) as a target
+		2. try to access an external JS such as: http://blah.com/myjs.js
+		3. return to the original target
+
+		In short: if file: stay with file, if url: stay with url
+
+
+EXAMPLES:
+---------
+comments.py -f <file.php>
+comments.py -f <file.html>
+comments.py -f <file.js>
+
+comments.py -u http://<url.com>
+comments.py -u "http://url.com?param1=1&param2=2"
+comments.py -u https://<url.com>
+comments.py -u http://<url.js>
+
+comments.py -u http://<url.com> -c Cookie1=value1 Cookie2=value2
+
+comments.py -d ./test/
+comments.py -d C:/Users/blah/Documents/
+
+More to come.
+'''
+
+#http://docs.python-requests.org/en/latest/user/quickstart/
+import urllib
 import argparse
 import re
 import sys, os
 from bs4 import BeautifulSoup, Comment
 from urlparse import urljoin
 
+import contentmod
+
+
+
+def getURLs(content):
+	urls_href = content.findAll(href=True)
+	for url_href in urls_href:
+		urls.append(url_href['href'])
+
+	for url in urls:
+		print url
+		# print url.rpartition('/')[0]
+		# u.append(url.rpartition('/'))
+
+	# for uu in u: print uu
 
 
 
 
 
-def getJScomments(jscode):
-	# get all comments inside jscode, returns a list
-
-	js_comments=[]
-	reg_comm_1l="[^:|\'|\"]\/\/.*"		# one-line comment
-	reg_comm_ml="\/\*.*?\*\/"			# multi-line comment
 
 
-	#if jscode is JS file/URL (*.js) the jscode is str
-	#if jscode comes from an HTML source, then this is bs4 type
-
-	# one-line comment: //example
-	if isJS: comments_1l = re.findall(reg_comm_1l,jscode)
-	elif not isJS: comments_1l = re.findall(reg_comm_1l,jscode.text)
-
-	for comment_1l in comments_1l:
-		js_comments.append(comment_1l)
-
-	# multi-line comments: /* example */
-	if isJS: comments_ml = re.findall(reg_comm_ml,jscode, re.DOTALL)
-	elif not isJS: comments_ml = re.findall(reg_comm_ml,jscode.text, re.DOTALL)
-
-	for comment_ml in comments_ml:
-		js_comments.append(comment_ml)
-
-	return js_comments
-
-
-
-def getContent(target, target_type):
-	'''
-	get the target content, according to its type (file, url)
-	
-	supported types:
-		- "url"
-		- "file"
-	'''
-
-	global isJS
-
-	print "\n[+] TARGET = %s  (%s)\n" %(target, target_type)
-
-	if target_type == "file" or target_type == "folder":
-		with open(target,'rb') as input_file:
-			#if target is a JS file (*.js) then just get the content
-			if os.path.splitext(target)[1] == ".js":
-				content = input_file.read()
-				isJS=True
-			
-			#if not, assume this is HTML type, then parse it with BS
-			else:
-				content = BeautifulSoup(input_file, "html.parser")
-				isJS=False
-
-	
-	#if target url is provided
-	#BE CAREFUL: if the URL has GET parameters, then you MUST put it between quotes
-	elif target_type == "url":
-		try:
-			if args.c: resp = requests.get(target, cookies=dictcookies)
-			else: resp = requests.get(target)
-		except: 
-			print "Error when requesting the target."
-			sys.exit()
-		
-		#check if this is a JS or HTML code by getting the content-type
-		#if JS then just get the content because BS is broken at some point when parsing JS content
-		content_type=resp.headers.get("content-type")
-		if re.search("javascript", content_type):
-			isJS=True
-			content = resp.text.encode("utf-8")
-		
-		#if it's not a JS, we can parse it with BS
-		else:
-			content = BeautifulSoup(resp.text, "html.parser")
-			isJS=False
-
-	else:
-		print "Error, unknown type."
-		sys.exit()
-
-	# print "*** DEBUG ***\n %s \n*** DEBUG ***" %(content)
-	return content
 
 
 
@@ -121,7 +116,9 @@ PROGRAM STARTS HERE
 '''
 
 target=""
-web_ext=[".asp", ".aspx", ".asx", ".html", "htm", ".js", ".php"]
+web_ext=[".asp", ".aspx", ".asx", ".html", "htm", ".js", ".php"]		# valid extensions used to keep only the files (when -d) we want to parse
+urls=[]
+u=[]
 
 # Args
 parser = argparse.ArgumentParser(
@@ -142,10 +139,10 @@ parser.add_argument("-d", help="input directory", type=str)
 args = parser.parse_args()
 
 
+dictcookies={}
 
 if args.c:
 	# Requests module requires a dictionary
-	dictcookies={}
 
 	for nbCookies in range(0,len(args.c)):
 		cookie=args.c[nbCookies]
@@ -178,7 +175,6 @@ elif args.u:
 
 # if target is a directory
 elif args.d:
-	#take the first file
 	#need to select only the web files! (html, php, etc.)
 
 	for root, dirs, files in os.walk(args.d):
@@ -187,7 +183,7 @@ elif args.d:
 				target_type="folder"
 				target=os.path.join(root, f)
 				target_origin=target
-				break
+				break	#take the first file
 			break
 	if not target:
 		print "No target found."
@@ -201,45 +197,47 @@ else:
 
 
 while True:	
+	# vars below need to be reset (that's why they're here)
 	js_ext_all=[]			# JS from a file or url (not included within the web page with <script> tag)
-	js_comments_all=[]
-	isJS=''
-	files_all=[]
-	clear()
+	js_comments_all=[]		# list of all the JavaScript comments
+	content=[None,None]
+	files_all=[]			# list of all files contained in the directory (related to -d arg)
+	# clear()
 
 	# Get target's content
 	try: 
-		content = getContent(target,target_type)
+		content = contentmod.getContent(target,target_type,dictcookies)
 	except: 
 		print "Error while getting the content."
 		sys.exit()
 
 
-	#if the target file is not a JS file:
 	#get external JS, HTML comments and all JS codes
-	if not isJS: 
+	
+	#if the target file is not a JS file:
+	if not content[1]: 
 
 		# get all HTML comments
-		html_comments = content.findAll(text=lambda text:isinstance(text, Comment))
+		html_comments = content[0].findAll(text=lambda text:isinstance(text, Comment))
 		print "\n[+] HTML COMMENTS (%i found)\n" %(len(html_comments))
 		for html_com in html_comments:
 			try:
 				print "\t[-]%s\n" %(html_com)
-			except:
+			except:	
 				print "\t[-] !Error! (very special characters?)\n"
 
 		# to get all JS comments:
-		# get all je JS code, then for each one of them get all comments and add the returned list (from getJScomments) to the final list (js_comments_all)
-		js_all = content.find_all('script')
+		# get all the JS code, then for each one of them get all comments and add the returned list (from getJScomments) to the final list (js_comments_all)
+		js_all = content[0].find_all('script')
 		for js in js_all:
 			# check if there is an 'src' attribute in order to know if there is a call to an external JS file:
 			if js.has_attr("src"):js_ext_all.append(js.get('src'))
-			js_comments_all += getJScomments(js)
+			js_comments_all += contentmod.getJScomments(js, False)
 
 
 	#if the target is a JS file, then just get the comments fom the JS code
-	elif isJS:
-		js_comments_all += getJScomments(content)
+	elif content[1]:
+		js_comments_all += contentmod.getJScomments(content[0], True)
 
 	else:
 		print "Erorr: don't know how to handle this target."
@@ -261,6 +259,10 @@ while True:
 
 
 
+
+	# URLs (href)
+	print "\n\n\n[+] URLs (i found)\n" #%(len(js_comments_all))
+	# getURLs(content)
 
 
 
