@@ -6,7 +6,7 @@ See "examples" section for more details.
 
 
 
-SUMMARY:
+Summary:
 -------
 [Description][1]
 [Requirements][2]
@@ -15,17 +15,17 @@ SUMMARY:
 [To Improve][5]
 [Issues][6]
 [Examples][7]
+[Disclaimer]
 
 
-
-REQUIREMENTS:
+Requirements:
 ------------
 - [beautifulsoup](https://www.crummy.com/software/BeautifulSoup/)
 - [request](http://docs.python-requests.org/en/master/)
 
 
 
-HELP:
+Help:
 ----
 ####usage:
 ~~~
@@ -56,7 +56,7 @@ TODO:
 * CSS comments ?
 
 
-TO IMPROVE:
+To improve:
 ----------
 * clear screen (os.system("cls")) obviously doesn't work on Linux
 * regex (all)
@@ -65,7 +65,7 @@ TO IMPROVE:
 * -f displays external JS (from other domains), while -d displays local files (JS, html, php, etc.), no external files
 
 
-ISSUES:
+Issues:
 ------
 - if script tag is not closed, then jscode is empty
 - when -u <url> if the URL has GET parameters, then you **must** use quotes. example: 
@@ -80,7 +80,7 @@ ISSUES:
 	In short: if file: stay with file, if url: stay with url
 
 
-EXAMPLES:
+Examples:
 --------
 ~~~
 webcomments.py -f <file.php>
@@ -106,3 +106,4 @@ More to come.
 [4]:https://github.com/Logeirs/WebComments#to-improve
 [5]:https://github.com/Logeirs/WebComments#issues
 [6]:https://github.com/Logeirs/WebComments#examples
+[7]:https://github.com/Logeirs/WebComments#disclaimer
