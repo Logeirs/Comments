@@ -14,7 +14,7 @@ REQUIREMENTS:
 
 HELP:
 ====
-##usage:
+###usage:
 comments.py -c cookie1=value1 cookie2=value2 [-f <input file>] [-u <url>] [-d <folder>]
 
 ##arguments:
