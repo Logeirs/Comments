@@ -1,7 +1,7 @@
 WEBCOMMENTS
 ===========
 
-This script gets HTML and JavaScript comments in a web source code. Input can be either a URL, a file (.js or a .html, .php, etc.) or a folder
+This script gets HTML and JavaScript comments in a web source code. Input can be either a URL, a file (.js or a .html, .php, etc.) or a folder.
 See "examples" section for more details.
 
 
