@@ -1,28 +1,32 @@
 WEBCOMMENTS
 ===========
 
-SUMMARY:
--------
-[DESCRIPTION][1]
-
-
-
-DESCRIPTION:
------------
 This script gets HTML and JavaScript comments in a web source code. Input can be either a URL, a file (.js or a .html, .php, etc.) or a folder
 See "examples" section for more details.
 
 
 
+SUMMARY:
+-------
+[Description][1]
+[Requirements][2]
+[Help][3]
+[TODO][4]
+[To Improve][5]
+[Issues][6]
+[Examples][7]
+
+
+
 REQUIREMENTS:
-============
+------------
 - [beautifulsoup](https://www.crummy.com/software/BeautifulSoup/)
 - [request](http://docs.python-requests.org/en/master/)
 
 
 
 HELP:
-====
+----
 ####usage:
 webcomments.py -c cookie1=value1 cookie2=value2 [-f <input file>] [-u <url>] [-d <folder>]
 
@@ -39,7 +43,7 @@ webcomments.py -c cookie1=value1 cookie2=value2 [-f <input file>] [-u <url>] [-d
 
 
 TODO:
-====
+----
 * When source code is provided:
 	-f what about external JS loaded?
 
@@ -50,7 +54,7 @@ TODO:
 
 
 TO IMPROVE:
-==========
+----------
 * clear screen (os.system("cls")) obviously doesn't work on Linux
 * regex (all)
 * at this point, can't use -f AND -u together
@@ -59,7 +63,7 @@ TO IMPROVE:
 
 
 ISSUES:
-======
+------
 - if script tag is not closed, then jscode is empty
 - when -u <url> if the URL has GET parameters, then you **must** use quotes. example: 
 	comments.py -u "http://website.com?param1=1&param2=2"
@@ -74,7 +78,7 @@ ISSUES:
 
 
 EXAMPLES:
-========
+--------
 ~~~
 webcomments.py -f <file.php>
 webcomments.py -f <file.html>
@@ -94,3 +98,8 @@ More to come.
 
 
 [1]:https://github.com/Logeirs/WebComments#description
+[2]:https://github.com/Logeirs/WebComments#requirements
+[3]:https://github.com/Logeirs/WebComments#todo
+[4]:https://github.com/Logeirs/WebComments#to-improve
+[5]:https://github.com/Logeirs/WebComments#issues
+[6]:https://github.com/Logeirs/WebComments#examples
