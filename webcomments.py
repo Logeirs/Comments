@@ -73,24 +73,11 @@ import contentmod
 
 
 def getURLs(content):
-	urls_href = content.findAll(href=True)
-	for url_href in urls_href:
-		urls.append(url_href['href'])
-
+	cont = content[0]
+	urls= cont.findAll('a',href=True)
+	urls=list(set(urls))
 	for url in urls:
-		print url
-		# print url.rpartition('/')[0]
-		# u.append(url.rpartition('/'))
-
-	# for uu in u: print uu
-
-
-
-
-
-
-
-
+		print '\t'+url['href']
 
 
 
@@ -116,7 +103,7 @@ PROGRAM STARTS HERE
 '''
 
 target=""
-web_ext=[".asp", ".aspx", ".asx", ".html", "htm", ".js", ".php"]		# valid extensions used to keep only the files (when -d) we want to parse
+web_ext=[".asp", ".aspx", ".asx", ".html", ".htm", ".js", ".php"]		# valid extensions used to keep only the files (when -d) we want to parse
 urls=[]
 u=[]
 
@@ -124,7 +111,7 @@ u=[]
 parser = argparse.ArgumentParser(
 	usage="comments.py ([-u <target url>] | [-f <intput file>] | [-d <input directory>]) [-c cookie=value]", 
 	description="Get HTML and JavaScript comments from a file or a website.", 
-	epilog="Example: comments.py -u http://<website> -o output.txt"
+	epilog="Example: comments.py -u http://<website> -c cookie=value -o output.txt"
 	)
 
 parser.add_argument("-o", help="output file", type=str)
@@ -135,6 +122,7 @@ parser.add_argument("-c", help="cookie='value'", type=str, nargs='+')
 parser.add_argument("-f", help="input source file", type=str)
 parser.add_argument("-u", help="target url", type=str)
 parser.add_argument("-d", help="input directory", type=str)
+parser.add_argument("-lu", help="grab href tags", action="store_true")
 
 args = parser.parse_args()
 
@@ -181,10 +169,16 @@ elif args.d:
 		if files:
 			for f in files:
 				target_type="folder"
-				target=os.path.join(root, f)
-				target_origin=target
-				break	#take the first file
-			break
+
+				# get file extension
+				f_name, f_ext = os.path.splitext(f)
+				# if this is a web file
+				if f_ext in web_ext: 
+					target=os.path.join(root, f)
+					target_origin=target
+
+				if target!='': break	#take the first file
+			if target!='': break
 	if not target:
 		print "No target found."
 		sys.exit()
@@ -200,7 +194,7 @@ while True:
 	# vars below need to be reset (that's why they're here)
 	js_ext_all=[]			# JS from a file or url (not included within the web page with <script> tag)
 	js_comments_all=[]		# list of all the JavaScript comments
-	content=[None,None]
+	content=[None,None]		# [content, isJSFile]
 	files_all=[]			# list of all files contained in the directory (related to -d arg)
 	# clear()
 
@@ -261,8 +255,9 @@ while True:
 
 
 	# URLs (href)
-	print "\n\n\n[+] URLs (i found)\n" #%(len(js_comments_all))
-	# getURLs(content)
+	if args.lu:
+		print "\n\n\n[+] URLs (i found)\n" #%(len(js_comments_all))
+		getURLs(content)
 
 
 
@@ -287,12 +282,11 @@ while True:
 		choice_list=js_ext_all
 		choice_title="EXTERNAL JS"
 
+		# if no ext JS
+		if len(js_ext_all) == 0: sys.exit()
 
 	displayChoice(choice_title, choice_list)	#display
 
-
-		# if no ext JS
-		# if len(js_ext_all) == 0: sys.exit()
 
 	choice=''
 	while True:
