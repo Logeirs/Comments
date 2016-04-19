@@ -1,10 +1,18 @@
-DESCRIPTION:
+#DESCRIPTION:
 ------------
 	This script gets all comments in a web source code
 	You can use it with either a URL (-u) or by passing a file as an argument (-f)
 		- URL can be either a page or JS URL.
 		- File can be HTML/PHP or JS
 		See "examples" section for more details.
+
+
+
+REQUIREMENTS
+------------
+	* beautifulsoup: https://www.crummy.com/software/BeautifulSoup/
+	* request: http://docs.python-requests.org/en/master/
+
 
 
 HELP:
@@ -18,15 +26,15 @@ HELP:
 	  -f 			input source file
 	  -d 			input directory
 	  -u 			target url
+
 	  -c 			cookies
+	  -lu 			list URLs
 	  -o 			output file (todo)
 
 
 
 TODO:
 -----
-	* Spidering
-	
 	* When source code is provided:
 		-f what about external JS loaded?
 
@@ -47,7 +55,6 @@ TO IMPROVE:
 
 ISSUES:
 -------
-	- REGEX doesn't work when JS is minimized
 	- if script tag is not closed, then jscode is empty
 	- when -u <url> if the URL has GET parameters, then you MUST use quotes. example: 
 		comments.py -u "http://website.com?param1=1&param2=2"
