@@ -1,4 +1,4 @@
-#DESCRIPTION:
+DESCRIPTION:
 ------------
 This script gets all comments in a web source code
 You can use it with either a URL (-u) or by passing a file as an argument (-f)
@@ -17,7 +17,7 @@ REQUIREMENTS
 
 HELP:
 -----
-usage: comments.py [-f <input file>] [-u <url>]
+usage: comments.py -c cookie1=value1 cookie2=value2 [-f <input file>] [-u <url>] [-d <folder>]
 
 Get HTML and JavaScript comments from a file or a website.
 
