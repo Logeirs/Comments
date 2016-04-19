@@ -1,28 +1,22 @@
-DESCRIPTION:
+#DESCRIPTION:
 ===========
-This script gets all comments in a web source code.
-You can use it with either a URL (-u) or by passing a file as an argument (-f):
-- URL can be either a page or JS URL.
-- File can be HTML/PHP or JS
-
+This script gets HTML and JavaScript comments in a web source code. Input can be either a URL, a file (.js or a .html, .php, etc.) or a folder
 See "examples" section for more details.
 
 
 
-REQUIREMENTS:
+#REQUIREMENTS:
 ============
 * beautifulsoup: https://www.crummy.com/software/BeautifulSoup/
 * request: http://docs.python-requests.org/en/master/
 
 
 
-HELP:
+#HELP:
 ====
-usage: comments.py -c cookie1=value1 cookie2=value2 [-f <input file>] [-u <url>] [-d <folder>]
+#usage: comments.py -c cookie1=value1 cookie2=value2 [-f <input file>] [-u <url>] [-d <folder>]
 
-Get HTML and JavaScript comments from a file or a website.
-
-arguments:
+##arguments:
   -h, --help 	show this help message and exit
   -f 			input source file
   -d 			input directory
@@ -57,7 +51,7 @@ TO IMPROVE:
 ISSUES:
 ======
 - if script tag is not closed, then jscode is empty
-- when -u <url> if the URL has GET parameters, then you MUST use quotes. example: 
+- when -u <url> if the URL has GET parameters, then you **must** use quotes. example: 
 	comments.py -u "http://website.com?param1=1&param2=2"
 	If you don't, you may have an error such as: 'blah' is not recognized as an internal or external command, ...
 		Seems to work now...
