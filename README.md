@@ -72,19 +72,20 @@ ISSUES:
 
 EXAMPLES:
 ========
-> webcomments.py -f <file.php>
->webcomments.py -f <file.html>
->webcomments.py -f <file.js>
 ~~~
+webcomments.py -f <file.php>
+webcomments.py -f <file.html>
+webcomments.py -f <file.js>
+
 webcomments.py -u http://<url.com>
 webcomments.py -u "http://url.com?param1=1&param2=2"
 webcomments.py -u https://<url.com>
 webcomments.py -u http://<url.js>
-~~~
-webcomments.py -u http://<url.com> -c Cookie1=value1 Cookie2=value2
+webcomments.py -u http://<url.com> -c cookie1=value1 cookie2=value2
 
 webcomments.py -d ./test/
 webcomments.py -d C:/Users/blah/Documents/
+~~~
 
 More to come.
 
