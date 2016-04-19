@@ -106,6 +106,7 @@ target=""
 web_ext=[".asp", ".aspx", ".asx", ".html", ".htm", ".js", ".php"]		# valid extensions used to keep only the files (when -d) we want to parse
 urls=[]
 u=[]
+dictcookies={}
 
 # Args
 parser = argparse.ArgumentParser(
@@ -126,21 +127,16 @@ parser.add_argument("-lu", help="grab href tags", action="store_true")
 
 args = parser.parse_args()
 
-
-dictcookies={}
-
 if args.c:
 	# Requests module requires a dictionary
 
 	for nbCookies in range(0,len(args.c)):
 		cookie=args.c[nbCookies]
-		
 		cname=re.search("(.*)=.*",cookie)
 		cname=cname.group(1)
 		cvalue=re.search(".*=(.*)",cookie)
 		cvalue=cvalue.group(1)
 		dictcookies[cname]=cvalue
-
 
 
 # if target is a source file (.js, .html, .php, etc.)
