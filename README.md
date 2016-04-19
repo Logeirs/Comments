@@ -1,11 +1,14 @@
+WEBCOMMENTS
+===========
+
 SUMMARY:
-=======
+-------
 [DESCRIPTION][1]
 
 
 
 DESCRIPTION:
-===========
+-----------
 This script gets HTML and JavaScript comments in a web source code. Input can be either a URL, a file (.js or a .html, .php, etc.) or a folder
 See "examples" section for more details.
 
