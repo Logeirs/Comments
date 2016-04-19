@@ -1,20 +1,21 @@
-#DESCRIPTION:
+DESCRIPTION:
 ===========
 This script gets HTML and JavaScript comments in a web source code. Input can be either a URL, a file (.js or a .html, .php, etc.) or a folder
 See "examples" section for more details.
 
 
 
-#REQUIREMENTS:
+REQUIREMENTS:
 ============
 * beautifulsoup: https://www.crummy.com/software/BeautifulSoup/
 * request: http://docs.python-requests.org/en/master/
 
 
 
-#HELP:
+HELP:
 ====
-#usage: comments.py -c cookie1=value1 cookie2=value2 [-f <input file>] [-u <url>] [-d <folder>]
+##usage:
+comments.py -c cookie1=value1 cookie2=value2 [-f <input file>] [-u <url>] [-d <folder>]
 
 ##arguments:
   -h, --help 	show this help message and exit
