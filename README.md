@@ -28,9 +28,12 @@ REQUIREMENTS:
 HELP:
 ----
 ####usage:
+~~~
 webcomments.py -c cookie1=value1 cookie2=value2 [-f <input file>] [-u <url>] [-d <folder>]
+~~~
 
 ###arguments:
+~~~
   -h, --help 	show this help message and exit
   -f 			input source file
   -d 			input directory
@@ -39,7 +42,7 @@ webcomments.py -c cookie1=value1 cookie2=value2 [-f <input file>] [-u <url>] [-d
   -c 			cookies
   -lu 			list URLs
   -o 			output file (todo)
-
+~~~
 
 
 TODO:
