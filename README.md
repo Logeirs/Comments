@@ -8,14 +8,14 @@ See "examples" section for more details.
 
 Summary:
 -------
-[Description][1]
-[Requirements][2]
-[Help][3]
-[TODO][4]
-[To Improve][5]
-[Issues][6]
-[Examples][7]
-[Disclaimer]
+[1. Description][1]
+[2. Requirements][2]
+[3. Help][3]
+[4. TODO][4]
+[5. To Improve][5]
+[6. Issues][6]
+[7 .Examples][7]
+[8. Disclaimer][8]
 
 
 Requirements:
@@ -102,8 +102,9 @@ More to come.
 
 [1]:https://github.com/Logeirs/WebComments#description
 [2]:https://github.com/Logeirs/WebComments#requirements
-[3]:https://github.com/Logeirs/WebComments#todo
-[4]:https://github.com/Logeirs/WebComments#to-improve
-[5]:https://github.com/Logeirs/WebComments#issues
-[6]:https://github.com/Logeirs/WebComments#examples
-[7]:https://github.com/Logeirs/WebComments#disclaimer
+[3]:https://github.com/Logeirs/WebComments#help
+[4]:https://github.com/Logeirs/WebComments#todo
+[5]:https://github.com/Logeirs/WebComments#to-improve
+[6]:https://github.com/Logeirs/WebComments#issues
+[7]:https://github.com/Logeirs/WebComments#examples
+[8]:https://github.com/Logeirs/WebComments#disclaimer
