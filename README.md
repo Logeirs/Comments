@@ -1,10 +1,11 @@
 DESCRIPTION:
 ===========
-This script gets all comments in a web source code
-You can use it with either a URL (-u) or by passing a file as an argument (-f)
-	- URL can be either a page or JS URL.
-	- File can be HTML/PHP or JS
-	See "examples" section for more details.
+This script gets all comments in a web source code.
+You can use it with either a URL (-u) or by passing a file as an argument (-f):
+- URL can be either a page or JS URL.
+- File can be HTML/PHP or JS
+
+See "examples" section for more details.
 
 
 
