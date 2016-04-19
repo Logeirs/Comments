@@ -8,8 +8,8 @@ See "examples" section for more details.
 
 Summary:
 -------
-[1. Description][1]
-[2. Requirements][2]
+1. [1. Description][1]
+2. [2. Requirements][2]
 [3. Help][3]
 [4. TODO][4]
 [5. To Improve][5]
